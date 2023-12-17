@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Example</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"></head>
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container" >
+          <a class="navbar-brand" href="#"><img src="/assets/imgs/logo.jpg" alt=""></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleNavbar()">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse" [ngClass]="{'show': isCollapsed }">
+            <ul class="navbar-nav mr-auto" *ngIf="accountService.currentUser$ | async">
+              <li class="nav-item">
+                <a class="nav-link" href="#">Matches</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Lists</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Messages</a>
+              </li>
+            </ul>
+
+            <div class="dropdown" *ngIf="accountService.currentUser$| async" dropdown>
+              <a class="dropdown-toggle text-light" dropdownToggle>Welcome user</a>
+              <div class="dropdown-menu" *dropdownMenu>
+                <a class="dropdown-item">Edit profile</a>
+                <a class="dropdown-item" (click)="logout()">Logout</a>
+              </div>
+            </div>
+
+            <form *ngIf="!(accountService.currentUser$ | async)" #loginForm="ngForm" class="d-flex ms-auto"  (ngSubmit)="login()" autocomplete="off" >
+              <input 
+                name="username"
+                [(ngModel)] = "model.username"
+                class="form-control me-2"
+                type="text"
+                placeholder="Username">
+
+              <input 
+                name="password"
+                [(ngModel)] = "model.password"
+                class="form-control me-2" 
+                type="password" 
+                placeholder="Password">
+              <button class="btn btn-outline-success" type="submit">Login</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Bootstrap Bundle with Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

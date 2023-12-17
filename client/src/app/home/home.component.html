@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.component.css">
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="div container">
+        <div *ngIf="!registerMode" style="text-align: center;">
+            <h1>Find your perfect match</h1>
+            <p class="lead">All you need to do is sign up!</p>
+            <div class="text-center">
+                <button (click)="registerToggle()" class="btn btn-primary btn-lg me-2">Register</button>
+                <button class="btn btn-primary btn-info btn-lg ">Learn more</button>
+            </div>
+        </div>
+
+
+        <div *ngIf="registerMode" class="container">
+            <div class="row justify-content-center">
+                <div class="col-4">
+                    <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
