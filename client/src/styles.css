@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+ 
+  .member-tabset .nav-link {
+    position: relative;
+    border: none;
+    padding-bottom: 10px;
+    margin-right: 20px;
+  }
+  .member-tabset .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+  .member-tabset .nav-link:hover::after {
+    background-color: #007bff; 
+  }
+
+  .member-tabset .tab-content {
+    
+    padding-top: 20px; 
+  }
+
+  .member-tabset > .nav-tabs > li.active > a {
+    border: 0 !important;
+    color: #333333;
+  }
+
+  .gallery {
+    height: 600px;
+  }
