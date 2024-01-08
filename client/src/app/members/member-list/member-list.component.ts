@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Member } from 'src/app/_models/member';
 import { MembersService } from 'src/app/_services/members.service';
 import { SharedModule } from '../../_modules/shared.module';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-member-list',
@@ -9,7 +10,7 @@ import { SharedModule } from '../../_modules/shared.module';
   styleUrls: ['./member-list.component.css']
 })
 export class MemberListComponent implements OnInit{
-  members: Member[] = [];
+  members$: Observable<Member[]> | undefined;
 
   
   constructor(private memberService: MembersService) {
@@ -17,12 +18,7 @@ export class MemberListComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.loadMembers();
+    this.members$ = this.memberService.getMembers();
   }
 
-  loadMembers() {
-    this.memberService.getMembers().subscribe({
-      next: members => this.members = members
-    })
-  }
 }
