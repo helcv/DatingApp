@@ -9,5 +9,6 @@ public interface IUserRepository
     Task<AppUser> GetUserByUsernameAsync(string username);
     Task<IEnumerable<MemberDto>> GetMembersAsync();
     Task<MemberDto> GetMemberAsync(string username);
+    Task<bool> DeleteUserAsync(string username);
 
 }

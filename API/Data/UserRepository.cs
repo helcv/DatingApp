@@ -59,4 +59,19 @@ public class UserRepository : IUserRepository
     {
         _context.Entry(user).State = EntityState.Modified;
     }
+
+    public async Task<bool> DeleteUserAsync(string username)
+    {
+        var userToDelete = await _context.Users
+            .FirstOrDefaultAsync(x => x.UserName == username);
+
+        if (userToDelete != null)
+        {
+            _context.Users.Remove(userToDelete);
+            await _context.SaveChangesAsync();
+            return true; // User deleted successfully
+        }
+
+        return false; 
+    }
 }

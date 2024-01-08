@@ -22,4 +22,8 @@ export class MembersService {
   updateMember(member: Member) {
     return this.http.put(this.baseUrl + 'users', member);
   }
+
+  deleteMember(model: any) {
+    return this.http.post(this.baseUrl + 'users/delete', model);
+  }
 }

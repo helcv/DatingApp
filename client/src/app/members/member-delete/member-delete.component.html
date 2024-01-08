@@ -1,0 +1,19 @@
+<div class="d-flex justify-content-center">
+    <form #deleteForm="ngForm" id="deleteForm" (ngSubmit)="deleteMember()">
+        <div class="alert alert-info pb-0 text-center">
+            <p><strong>Are you sure you want to delete account?</strong></p>
+            <p><strong>Confirm password: </strong></p>
+        </div>
+        <div class="mb-3">
+            <input type="password"
+                class="form-control"
+                name="password"
+                [(ngModel)] = "model.password"
+                placeholder="Password"
+            >
+        </div>
+        <div class="text-center">
+            <button class="btn btn-danger" type="submit" [disabled]="!deleteForm.dirty">Delete account</button>
+        </div>
+    </form>
+</div>
