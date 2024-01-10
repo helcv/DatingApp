@@ -33,12 +33,13 @@ export class MemberDeleteComponent implements OnInit{
         next: _ => {
           this.toastr.success('Account deleted successfully!');
           this.accountService.logout();
-          this.router.navigate(['/']);
+          //this.router.navigate(['/']);
         },
         error: err => {
           console.error('Error occurred while deleting account:', err);
         }
       });
+      
     }
   }
 }

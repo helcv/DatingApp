@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/member';
-import { map, of } from 'rxjs';
+import { map, of, switchMap, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,15 @@ export class MembersService {
     );
   }
 
+  getMembersAfterDelete() {
+    return this.http.get<Member[]>(this.baseUrl + 'users').pipe(
+      map(members => {
+        this.members = members;
+        return members;
+      })
+    );
+  }
+
   getMember(username: string) {
     const member = this.members.find(x => x.userName == username);
     if (member) return of(member);
@@ -34,6 +43,14 @@ export class MembersService {
   }
 
   deleteMember(model: any) {
-    return this.http.post(this.baseUrl + 'users/delete', model);
+    return this.http.post(this.baseUrl + 'users/delete', model).pipe(
+      switchMap(() => {
+        return this.getMembersAfterDelete();
+      }),
+      tap( (members: Member[]) => {
+        // Update the local members array with the fetched updated data
+        this.members = members;
+      })
+    );
   }
 }
