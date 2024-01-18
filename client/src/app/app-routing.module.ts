@@ -12,9 +12,10 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 import { MemberDeleteComponent } from './members/member-delete/member-delete.component';
+import { registerAccessGuard } from './_guards/register-access.guard';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: HomeComponent, canActivate: [registerAccessGuard]},
   {path: '',
     runGuardsAndResolvers: 'always',
     canActivate: [authGuard],
