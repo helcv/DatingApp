@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +12,12 @@ public class AccountController : BaseApiController
     private readonly DataContext _context;
     private readonly ITokenService _tokenService;
     private readonly IMapper _mapper;
-    public AccountController(DataContext context, ITokenService tokenService, IMapper mapper){
+    private readonly IConfigurationSection _googleCredentials;
+    public AccountController(DataContext context, ITokenService tokenService, IMapper mapper, IConfiguration config){
         _context = context;
         _tokenService = tokenService;
         _mapper = mapper;
+        _googleCredentials = config.GetSection("GoogleClientId");
     }
 
     [HttpPost("register")]      //  api/Account/register
@@ -41,6 +44,39 @@ public class AccountController : BaseApiController
             KnownAs = user.KnownAs,
             Gender = user.Gender
          };
+    }
+
+    [HttpPost("signin-google")]
+    public async Task<ActionResult<UserDto>> GoogleRegister(GoogleSignInDTO googleDto){
+        var payload = await GoogleJsonWebSignature.ValidateAsync(googleDto.GoogleToken);
+
+        if (payload.Audience.ToString() != _googleCredentials.Value){
+            throw new InvalidJwtException("Invalid token");
+        }
+
+        var user = _mapper.Map<AppUser>(googleDto);
+        
+        string[] parts = payload.Email.Split('@');
+        var username = parts[0].ToLower();
+
+        using var hmac = new HMACSHA512();
+
+        user.UserName = username;
+        user.KnownAs = username;
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(googleDto.Password));
+        user.PasswordSalt = hmac.Key;
+
+        if(await UserExists(username)) return BadRequest("Username is taken");
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        return new UserDto{
+            Username = user.UserName,
+            KnownAs = user.KnownAs,
+            Token = _tokenService.CreateToken(user),
+            Gender = googleDto.Gender
+        };
     }
 
     [HttpPost("login")]
