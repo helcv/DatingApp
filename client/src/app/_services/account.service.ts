@@ -37,6 +37,16 @@ export class AccountService {
     )
   }
 
+  registerGoogle(model: any) {
+    return this.http.post<User>(this.baseUrl + 'account/signin-google', model).pipe(
+      map(user => {
+        if (user) {
+          this.setCurrentUser(user);
+        }
+      })
+    )
+  }
+
   setCurrentUser(user : User){
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);

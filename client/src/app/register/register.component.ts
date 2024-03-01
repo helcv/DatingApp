@@ -1,8 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, NgZone } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { ToastrService } from 'ngx-toastr';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CredentialResponse, PromptMomentNotification} from 'google-one-tap';
+import { environment } from 'src/environments/environment';
+//import * as google from 'google-one-tap';
+declare var google: any;
+
 
 @Component({
   selector: 'app-register',
@@ -15,12 +20,36 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup = new FormGroup({});
   maxDate: Date = new Date();
   validationErrors: string[] | undefined;
+  
 
-  constructor(private accountService: AccountService, private toastr: ToastrService, private fb: FormBuilder, private router: Router) {}
+  constructor(private accountService: AccountService, 
+    private toastr: ToastrService, 
+    private fb: FormBuilder, 
+    private router: Router,
+    private _ngZone: NgZone) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.initializeForm();
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
+
+      google.accounts.id.initialize({
+        client_id: environment.clientId,
+        callback: this.handleCredentialResponse.bind(this),
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById("buttonDiv")!,
+        { theme: "outline", size: "large", width: 100 }
+      );
+
+      google.accounts.id.prompt((notification: PromptMomentNotification) => {});
+    
+  }
+
+  async handleCredentialResponse(response: CredentialResponse){
+
   }
 
   initializeForm() {
