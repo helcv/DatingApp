@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit {
 
       google.accounts.id.renderButton(
         document.getElementById("buttonDiv")!,
-        { theme: "outline", size: "large", width: 100 }
+        { theme: "outline", size: "large", width: "100%" }
       );
 
       google.accounts.id.prompt((notification: PromptMomentNotification) => {});
@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
   }
 
   async handleCredentialResponse(response: CredentialResponse){
-
+     console.log(response.credential);
   }
 
   initializeForm() {
