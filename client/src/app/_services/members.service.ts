@@ -47,6 +47,17 @@ export class MembersService {
     return;
   }
 
+  updateCurrentUser() {
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: user => {
+        if (user) {
+          this.userParams = new UserParams(user);
+          this.user = user;
+        }
+      }
+    })
+  }
+
   getMembers(userParams: UserParams) {
     const response = this.memberCache.get(Object.values(userParams).join('-'));
 
@@ -97,6 +108,14 @@ export class MembersService {
 
   deletePhoto(photoId: number){
     return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+  }
+
+  addLike(username: string){
+    return this.http.post(this.baseUrl + 'likes/'+ username, {});
+  }
+
+  getLikes(predicate: string){
+    return this.http.get<Member[]>(this.baseUrl + 'likes?predicate=' + predicate);
   }
 
   deleteMember(model: any) {
